@@ -31,11 +31,12 @@ def test_load_provider_resolves_class_path():
 
 
 def test_get_active_provider_from_db():
-    # 시드된 separation provider가 로딩되어야 한다
+    # 활성 separation provider(DemucsProvider)가 DB에서 로딩되어야 한다.
+    # (실제 분리는 통합 테스트 test_demucs_provider.py에서 검증)
+    from app.pipeline.providers.demucs_provider import DemucsProvider
+
     provider = get_active_provider("separation")
-    assert provider is not None
-    result = asyncio.run(provider.run("job-1", {}))
-    assert result.success is True
+    assert isinstance(provider, DemucsProvider)
 
 
 def test_get_active_provider_unknown_step_returns_none():

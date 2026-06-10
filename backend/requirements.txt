@@ -7,9 +7,12 @@ pymysql
 alembic
 python-dotenv
 
-# AI Pipeline (단계별 설치 예정)
-# demucs
-# torch
-# torchaudio
+# AI Pipeline
+# torch/torchaudio: CPU build for now (CUDA cu121 deferred — see WORK_LOG "나중에 할 일")
+torch
+torchaudio
+# PyPI demucs 4.0.1 sdist is missing demucs/api.py; install from git which includes it (AC3 needs the Python API)
+# pinned to a commit (not HEAD) for reproducible builds
+demucs @ git+https://github.com/facebookresearch/demucs@e976d93ecc3865e5757426930257e200846a520a
 # diffusers
 # transformers
