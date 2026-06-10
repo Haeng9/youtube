@@ -27,6 +27,18 @@ frontend/dist/
 .DS_Store
 Thumbs.db
 
-# Project-specific
+# Project-specific (Claude Code)
 .claude/
+_bmad/
+_bmad-output/
 tmp/
+CLAUDE.md
+WORK_LOG.md
+
+# Logs & cache
+*.log
+.pytest_cache/
+
+# Database
+*.db
+*.sqlite

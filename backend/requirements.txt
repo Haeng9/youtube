@@ -2,6 +2,10 @@ fastapi
 uvicorn
 python-multipart
 aiofiles
+sqlalchemy>=2.0
+pymysql
+alembic
+python-dotenv
 
 # AI Pipeline (단계별 설치 예정)
 # demucs
