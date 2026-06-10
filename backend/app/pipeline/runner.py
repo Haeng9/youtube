@@ -1,44 +1,39 @@
+import asyncio
+
 from app.jobs.queue import update_job, JobStatus
+from app.pipeline.providers.loader import get_active_provider
+
+# 파이프라인 단계 순서: (DB step, 진행 메시지)
+PIPELINE_STEPS = [
+    ("separation", "[1/4] 보컬 분리 중..."),
+    ("music", "[2/4] 음악 생성 중..."),
+    ("image", "[3/4] 커버 이미지 생성 중..."),
+    ("video", "[4/4] 영상 합성 중..."),
+]
 
 
 def run_pipeline(job_id: str, input_path: str, style: str):
-    """
-    AI 파이프라인 실행 순서:
-    1. Demucs      - 보컬/반주 분리
-    2. RVC         - 보컬 스타일 변환
-    3. MusicGen    - 반주 재생성
-    4. SD          - 커버 이미지 생성
-    5. FFmpeg      - 최종 영상 합성
-    """
+    """DB에 설정된 provider를 단계별로 로딩해 실행한다.
+    현재는 stub provider라 실제 출력 파일은 생성되지 않는다."""
     try:
         update_job(job_id, JobStatus.PROCESSING, "파이프라인 시작...")
 
-        # TODO: Step 1 - Demucs 보컬/반주 분리
-        update_job(job_id, JobStatus.PROCESSING, "[1/5] 보컬 분리 중...")
-        # from app.pipeline.demucs_step import separate
-        # vocal_path, bgm_path = separate(input_path)
+        params = {"input_path": input_path, "style": style}
 
-        # TODO: Step 2 - RVC 보컬 스타일 변환
-        update_job(job_id, JobStatus.PROCESSING, "[2/5] 보컬 스타일 변환 중...")
-        # from app.pipeline.rvc_step import convert
-        # converted_vocal = convert(vocal_path, style)
+        for step, message in PIPELINE_STEPS:
+            update_job(job_id, JobStatus.PROCESSING, message)
 
-        # TODO: Step 3 - MusicGen 반주 재생성
-        update_job(job_id, JobStatus.PROCESSING, "[3/5] 반주 생성 중...")
-        # from app.pipeline.musicgen_step import generate_bgm
-        # new_bgm = generate_bgm(bgm_path, style)
+            provider = get_active_provider(step)
+            if provider is None:
+                update_job(job_id, JobStatus.FAILED, f"'{step}' 단계의 활성 provider가 없습니다.")
+                return
 
-        # TODO: Step 4 - Stable Diffusion 커버 이미지 생성
-        update_job(job_id, JobStatus.PROCESSING, "[4/5] 커버 이미지 생성 중...")
-        # from app.pipeline.sd_step import generate_image
-        # image_path = generate_image(style)
+            result = asyncio.run(provider.run(job_id, params))
+            if not result.success:
+                update_job(job_id, JobStatus.FAILED, f"'{step}' 단계 실패: {result.error}")
+                return
 
-        # TODO: Step 5 - FFmpeg 최종 영상 합성
-        update_job(job_id, JobStatus.PROCESSING, "[5/5] 영상 합성 중...")
-        # from app.pipeline.ffmpeg_step import render
-        # output_file = render(converted_vocal, new_bgm, image_path)
-
-        update_job(job_id, JobStatus.FAILED, "파이프라인 스텝 미구현 (TODO)")
+        update_job(job_id, JobStatus.DONE, "파이프라인 완료 (stub provider — 실제 출력 없음)")
 
     except Exception as e:
         update_job(job_id, JobStatus.FAILED, f"오류: {str(e)}")
