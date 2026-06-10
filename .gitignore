@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Data (모델 가중치, 업로드/출력 파일)
+backend/data/models/
+backend/data/uploads/
+backend/data/outputs/
+
+# Environment
+.env
+.env.*
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project-specific
+.claude/
+tmp/

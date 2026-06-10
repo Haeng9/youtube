@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-multipart
+aiofiles
+
+# AI Pipeline (단계별 설치 예정)
+# demucs
+# torch
+# torchaudio
+# diffusers
+# transformers
