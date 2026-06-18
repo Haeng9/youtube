@@ -39,5 +39,13 @@ def test_get_active_provider_from_db():
     assert isinstance(provider, DemucsProvider)
 
 
+def test_get_active_music_provider_is_suno():
+    # 활성 music provider가 stub이 아니라 SunoProvider여야 한다 (Story 2-1 마이그레이션).
+    from app.pipeline.providers.suno_provider import SunoProvider
+
+    provider = get_active_provider("music")
+    assert isinstance(provider, SunoProvider)
+
+
 def test_get_active_provider_unknown_step_returns_none():
     assert get_active_provider("nonexistent-step") is None

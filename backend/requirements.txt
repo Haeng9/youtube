@@ -6,6 +6,7 @@ sqlalchemy>=2.0
 pymysql
 alembic
 python-dotenv
+httpx
 
 # AI Pipeline
 # torch/torchaudio: CPU build for now (CUDA cu121 deferred — see WORK_LOG "나중에 할 일")
