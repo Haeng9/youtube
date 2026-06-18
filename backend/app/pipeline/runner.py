@@ -33,7 +33,15 @@ def run_pipeline(job_id: str, input_path: str, style: str):
                 update_job(job_id, JobStatus.FAILED, f"'{step}' 단계 실패: {result.error}")
                 return
 
-        update_job(job_id, JobStatus.DONE, "파이프라인 완료 (stub provider — 실제 출력 없음)")
+            # 이 step의 출력을 다음 step params로 누적 전달 (AC9).
+            # separation 출력(no_vocals.wav = MR)이 music step의 reference_audio_path가 된다.
+            if result.output_path:
+                params[f"{step}_output"] = result.output_path
+                if step == "separation":
+                    params["reference_audio_path"] = result.output_path
+            params.update(result.metadata or {})
+
+        update_job(job_id, JobStatus.DONE, "파이프라인 완료")
 
     except Exception as e:
         update_job(job_id, JobStatus.FAILED, f"오류: {str(e)}")
