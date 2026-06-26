@@ -33,7 +33,14 @@ class BaseImageProvider:
 
 
 class BaseVideoProvider:
-    """최종 영상 합성 단계 추상 인터페이스."""
+    """영상(i2v) 생성 단계 추상 인터페이스."""
+
+    async def run(self, job_id, params) -> ProviderResult:
+        raise NotImplementedError
+
+
+class BaseSynthesisProvider:
+    """최종 합성 단계(오디오+영상+커버 → output.mp4) 추상 인터페이스."""
 
     async def run(self, job_id, params) -> ProviderResult:
         raise NotImplementedError
