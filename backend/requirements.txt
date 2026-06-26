@@ -26,3 +26,11 @@ diffusers
 transformers
 accelerate
 safetensors
+# LTX-Video 로컬 i2v 영상 생성 (Story 3-2). 모델 Lightricks/LTX-Video
+# (OpenRAIL 기반, 연 매출 $10M 미만 상업 무료). 가중치는 최초 실행 시 data/models/ltx-video/
+# 로 자동 다운로드(git 제외). device 자동선택(CUDA면 bf16 + enable_model_cpu_offload로 12GB 적재,
+# 없으면 fp32 CPU). 해상도/프레임은 12GB 친화 보수 기본값(512×288/49f).
+# imageio-ffmpeg: diffusers export_to_video의 권장 백엔드(프레임→MP4 인코딩).
+imageio-ffmpeg
+# sentencepiece: LTX-Video의 T5 텍스트 인코더 토크나이저(T5Tokenizer)가 요구.
+sentencepiece

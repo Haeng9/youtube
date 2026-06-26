@@ -62,5 +62,13 @@ def test_get_active_image_provider_is_sdxl():
     assert isinstance(provider, SdxlProvider)
 
 
+def test_get_active_video_provider_is_ltx():
+    # Story 3-2: video step의 active provider가 stub이 아니라 LtxVideoProvider로 전환됐는지.
+    from app.pipeline.providers.ltx_video_provider import LtxVideoProvider
+
+    provider = get_active_provider("video")
+    assert isinstance(provider, LtxVideoProvider)
+
+
 def test_get_active_provider_unknown_step_returns_none():
     assert get_active_provider("nonexistent-step") is None
