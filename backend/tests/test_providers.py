@@ -7,6 +7,7 @@ from app.pipeline.providers.base import (
     BaseMusicProvider,
     BaseImageProvider,
     BaseVideoProvider,
+    BaseSynthesisProvider,
     ProviderResult,
 )
 from app.pipeline.providers.loader import load_provider, get_active_provider
@@ -14,7 +15,13 @@ from app.pipeline.providers.loader import load_provider, get_active_provider
 
 @pytest.mark.parametrize(
     "base_cls",
-    [BaseSeparationProvider, BaseMusicProvider, BaseImageProvider, BaseVideoProvider],
+    [
+        BaseSeparationProvider,
+        BaseMusicProvider,
+        BaseImageProvider,
+        BaseVideoProvider,
+        BaseSynthesisProvider,
+    ],
 )
 def test_abstract_run_raises_not_implemented(base_cls):
     provider = base_cls()
@@ -68,6 +75,14 @@ def test_get_active_video_provider_is_ltx():
 
     provider = get_active_provider("video")
     assert isinstance(provider, LtxVideoProvider)
+
+
+def test_get_active_synthesis_provider_is_ffmpeg():
+    # Story 3-3: synthesis step의 active provider가 FfmpegSynthesisProvider로 시드됐는지.
+    from app.pipeline.providers.ffmpeg_synthesis_provider import FfmpegSynthesisProvider
+
+    provider = get_active_provider("synthesis")
+    assert isinstance(provider, FfmpegSynthesisProvider)
 
 
 def test_get_active_provider_unknown_step_returns_none():

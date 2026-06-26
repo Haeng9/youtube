@@ -57,3 +57,41 @@ def test_separation_output_flows_to_music_reference(monkeypatch):
     assert captured["music"]["vocals"] == "/out/job/stems/vocals.wav"
     # 원본 style은 그대로 유지
     assert captured["music"]["style"] == "synthwave"
+
+
+def test_synthesis_step_receives_audio_video_cover(monkeypatch):
+    # Story 3-3: 5번째 step synthesis가 music→audio_path, image→cover_image_path,
+    # video→video_output(누적)을 받는지 검증 (AC11).
+    captured = {}
+
+    class _StepProvider:
+        """각 step이 받은 params를 step 이름으로 기록하고, 자기 step 이름의 출력 경로를 반환."""
+
+        def __init__(self, step):
+            self.step = step
+
+        async def run(self, job_id, params):
+            captured[self.step] = dict(params)
+            return ProviderResult(success=True, output_path=f"/out/{self.step}.bin")
+
+    def patched_get(step):
+        prov = _StepProvider(step)
+        orig_run = prov.run
+
+        async def run(job_id, params):
+            params["_step"] = step
+            return await orig_run(job_id, params)
+
+        prov.run = run
+        return prov
+
+    monkeypatch.setattr(runner, "get_active_provider", patched_get)
+    monkeypatch.setattr(runner, "update_job", lambda *a, **k: None)
+
+    runner.run_pipeline("job-2", "/in/song.mp3", "lofi")
+
+    syn = captured["synthesis"]
+    # music 출력 → audio_path, image 출력 → cover_image_path, video 출력 → video_output(누적)
+    assert syn["audio_path"] == "/out/music.bin"
+    assert syn["cover_image_path"] == "/out/image.bin"
+    assert syn["video_output"] == "/out/video.bin"

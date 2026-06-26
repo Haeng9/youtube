@@ -5,10 +5,11 @@ from app.pipeline.providers.loader import get_active_provider
 
 # 파이프라인 단계 순서: (DB step, 진행 메시지)
 PIPELINE_STEPS = [
-    ("separation", "[1/4] 보컬 분리 중..."),
-    ("music", "[2/4] 음악 생성 중..."),
-    ("image", "[3/4] 커버 이미지 생성 중..."),
-    ("video", "[4/4] 영상 합성 중..."),
+    ("separation", "[1/5] 보컬 분리 중..."),
+    ("music", "[2/5] 음악 생성 중..."),
+    ("image", "[3/5] 커버 이미지 생성 중..."),
+    ("video", "[4/5] 영상 생성 중..."),
+    ("synthesis", "[5/5] 최종 영상 합성 중..."),
 ]
 
 
@@ -39,9 +40,13 @@ def run_pipeline(job_id: str, input_path: str, style: str):
                 params[f"{step}_output"] = result.output_path
                 if step == "separation":
                     params["reference_audio_path"] = result.output_path
-                # image 산출물(cover.png)을 video step의 i2v 입력으로 연결 (image→video).
+                # image 산출물(cover.png)을 video step의 i2v 입력 + synthesis의 커버로 연결.
                 if step == "image":
                     params["image_path"] = result.output_path
+                    params["cover_image_path"] = result.output_path
+                # music 산출물을 synthesis의 오디오로 연결 (음악+영상+커버 → output.mp4).
+                if step == "music":
+                    params["audio_path"] = result.output_path
             params.update(result.metadata or {})
 
         update_job(job_id, JobStatus.DONE, "파이프라인 완료")

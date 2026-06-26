@@ -34,3 +34,6 @@ safetensors
 imageio-ffmpeg
 # sentencepiece: LTX-Video의 T5 텍스트 인코더 토크나이저(T5Tokenizer)가 요구.
 sentencepiece
+# FFmpeg 최종 합성 (Story 3-3): 음악+영상+커버 → output.mp4. 별도 Python 패키지 없음 —
+# stdlib subprocess로 시스템 ffmpeg를 호출한다(이미 런타임 필수 의존성: Demucs 디코딩/LTX export.
+# winget Gyan.FFmpeg가 PATH에 설치됨). 합성 단계는 PATH의 ffmpeg/ffprobe에 의존.
