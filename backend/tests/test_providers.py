@@ -47,5 +47,12 @@ def test_get_active_music_provider_is_suno():
     assert isinstance(provider, SunoProvider)
 
 
+def test_ace_step_registered_but_music_active_stays_suno():
+    # Story 2-2: ace_step는 is_active=False로 등록만 됐으므로 active music은 여전히 suno여야 한다.
+    from app.pipeline.providers.suno_provider import SunoProvider
+
+    assert isinstance(get_active_provider("music"), SunoProvider)
+
+
 def test_get_active_provider_unknown_step_returns_none():
     assert get_active_provider("nonexistent-step") is None

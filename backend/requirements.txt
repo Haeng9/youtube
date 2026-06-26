@@ -15,5 +15,8 @@ torchaudio
 # PyPI demucs 4.0.1 sdist is missing demucs/api.py; install from git which includes it (AC3 needs the Python API)
 # pinned to a commit (not HEAD) for reproducible builds
 demucs @ git+https://github.com/facebookresearch/demucs@e976d93ecc3865e5757426930257e200846a520a
+# ACE-Step: 로컬 원곡 음악 생성 (Story 2-2). 가중치(ACE-Step-v1-3.5B, 수 GB)는
+# 최초 실행 시 data/models/ace-step/ 로 자동 다운로드(git 제외). device 자동선택(CUDA 있으면 GPU).
+ace-step
 # diffusers
 # transformers
