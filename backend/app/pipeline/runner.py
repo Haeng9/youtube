@@ -39,6 +39,9 @@ def run_pipeline(job_id: str, input_path: str, style: str):
                 params[f"{step}_output"] = result.output_path
                 if step == "separation":
                     params["reference_audio_path"] = result.output_path
+                # image 산출물(cover.png)을 video step의 i2v 입력으로 연결 (image→video).
+                if step == "image":
+                    params["image_path"] = result.output_path
             params.update(result.metadata or {})
 
         update_job(job_id, JobStatus.DONE, "파이프라인 완료")
