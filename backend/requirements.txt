@@ -18,5 +18,11 @@ demucs @ git+https://github.com/facebookresearch/demucs@e976d93ecc3865e575742693
 # ACE-Step: 로컬 원곡 음악 생성 (Story 2-2). 가중치(ACE-Step-v1-3.5B, 수 GB)는
 # 최초 실행 시 data/models/ace-step/ 로 자동 다운로드(git 제외). device 자동선택(CUDA 있으면 GPU).
 ace-step
-# diffusers
-# transformers
+# SDXL 로컬 이미지 생성 (Story 3-1). 모델 stabilityai/stable-diffusion-xl-base-1.0
+# (OpenRAIL++-M, 상업 허용). 가중치 fp16 variant ~7GB는 최초 실행 시 data/models/sdxl/ 로
+# 자동 다운로드(git 제외). device 자동선택(CUDA면 fp16 GPU, 없으면 fp32 CPU).
+# (현재 ace-step이 transitive로 끌어오지만 image provider가 직접 의존하므로 명시.)
+diffusers
+transformers
+accelerate
+safetensors
