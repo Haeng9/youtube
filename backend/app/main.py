@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import UPLOAD_DIR, OUTPUT_DIR, MODELS_DIR, ALLOWED_ORIGINS
-from app.api import upload, jobs, download
+from app.api import upload, jobs, download, experiments
 
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -19,6 +19,7 @@ app.add_middleware(
 app.include_router(upload.router, prefix="/api")
 app.include_router(jobs.router, prefix="/api")
 app.include_router(download.router, prefix="/api")
+app.include_router(experiments.router, prefix="/api")
 
 
 @app.get("/")

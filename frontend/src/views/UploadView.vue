@@ -28,6 +28,8 @@
     <button :disabled="!selectedFile || loading" @click="submit">
       {{ loading ? '업로드 중...' : '변환 시작' }}
     </button>
+
+    <p class="link"><RouterLink to="/experiments">🧪 실험(A/B) 결과 비교</RouterLink></p>
   </div>
 </template>
 
@@ -90,4 +92,6 @@ button {
   border: none; border-radius: 8px; font-size: 16px; cursor: pointer;
 }
 button:disabled { background: #aaa; cursor: not-allowed; }
+.link { text-align: center; margin-top: 20px; }
+.link a { color: #3498db; text-decoration: none; }
 </style>
